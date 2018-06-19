@@ -20,7 +20,7 @@ public:
   void addOrUpdateSecret(const std::string& config_source_hash,
                          const envoy::api::v2::auth::Secret& secret) override;
   std::string
-  addOrUpdateSdsService(const envoy::api::v2::core::ConfigSource& config_source) override;
+  addOrUpdateSdsService(const envoy::api::v2::core::ConfigSource& config_source, std::string secret_name) override;
 
   Ssl::TlsCertificateConfigSharedPtr findTlsCertificate(const std::string& config_source_hash,
                                                         const std::string& name) const override;

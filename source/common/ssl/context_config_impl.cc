@@ -29,7 +29,8 @@ std::string readConfigSourceHash(const envoy::api::v2::auth::CommonTlsContext& c
   return (!config.tls_certificate_sds_secret_configs().empty() &&
           config.tls_certificate_sds_secret_configs()[0].has_sds_config())
              ? secret_manager.addOrUpdateSdsService(
-                   config.tls_certificate_sds_secret_configs()[0].sds_config())
+                   config.tls_certificate_sds_secret_configs()[0].sds_config(),
+                   config.tls_certificate_sds_secret_configs()[0].name())
              : "";
 }
 

@@ -10,9 +10,11 @@
 namespace Envoy {
 namespace Secret {
 
-SdsApi::SdsApi(Server::Instance& server, const envoy::api::v2::core::ConfigSource& sds_config)
+SdsApi::SdsApi(Server::Instance& server, const envoy::api::v2::core::ConfigSource& sds_config,
+               std::string name)
     : server_(server), sds_config_(sds_config),
-      sds_config_source_hash_(SecretManagerUtil::configSourceHash(sds_config)) {
+      sds_config_source_hash_(SecretManagerUtil::configSourceHash(sds_config)),
+      secret_name_(name) {
   server_.initManager().registerTarget(*this);
 }
 
@@ -36,7 +38,7 @@ void SdsApi::initialize(std::function<void()> callback) {
 
   Config::Utility::checkLocalInfo("sds", server_.localInfo());
 
-  subscription_->start({}, *this);
+  subscription_->start({secret_name_}, *this);
 }
 
 void SdsApi::onConfigUpdate(const ResourceVector& resources, const std::string&) {

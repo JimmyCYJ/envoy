@@ -40,7 +40,7 @@ public:
    * @return a hash string of normalized config source
    */
   virtual std::string
-  addOrUpdateSdsService(const envoy::api::v2::core::ConfigSource& config_source) PURE;
+  addOrUpdateSdsService(const envoy::api::v2::core::ConfigSource& config_source, std::string secret_name) PURE;
 
   /**
    * Register callback function when on secret were updated.

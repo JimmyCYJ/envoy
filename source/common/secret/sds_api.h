@@ -15,7 +15,7 @@ namespace Secret {
  */
 class SdsApi : public Init::Target, Config::SubscriptionCallbacks<envoy::api::v2::auth::Secret> {
 public:
-  SdsApi(Server::Instance& server, const envoy::api::v2::core::ConfigSource& sds_config);
+  SdsApi(Server::Instance& server, const envoy::api::v2::core::ConfigSource& sds_config, std::string secret_name);
 
   virtual ~SdsApi() {}
 
@@ -37,6 +37,7 @@ private:
   const std::string sds_config_source_hash_;
   std::unique_ptr<Config::Subscription<envoy::api::v2::auth::Secret>> subscription_;
   std::function<void()> initialize_callback_;
+  std::string secret_name_;
 };
 
 } // namespace Secret

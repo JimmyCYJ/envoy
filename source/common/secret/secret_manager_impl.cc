@@ -61,7 +61,7 @@ SecretManagerImpl::findTlsCertificate(const std::string& config_source_hash,
 }
 
 std::string SecretManagerImpl::addOrUpdateSdsService(
-    const envoy::api::v2::core::ConfigSource& sds_config_source) {
+    const envoy::api::v2::core::ConfigSource& sds_config_source, std::string secret_name) {
   std::unique_lock<std::shared_timed_mutex> lhs(sds_api_mutex_);
 
   auto hash = SecretManagerUtil::configSourceHash(sds_config_source);
@@ -69,7 +69,7 @@ std::string SecretManagerImpl::addOrUpdateSdsService(
     return hash;
   }
 
-  sds_apis_[hash] = std::move(std::make_unique<SdsApi>(server_, sds_config_source));
+  sds_apis_[hash] = std::move(std::make_unique<SdsApi>(server_, sds_config_source, secret_name));
 
   return hash;
 }
