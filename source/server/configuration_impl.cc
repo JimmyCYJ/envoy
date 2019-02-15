@@ -46,6 +46,7 @@ bool FilterChainUtility::buildFilterChain(
 void MainImpl::initialize(const envoy::config::bootstrap::v2::Bootstrap& bootstrap,
                           Instance& server,
                           Upstream::ClusterManagerFactory& cluster_manager_factory) {
+  ENVOY_LOG(info, "\n***************Debug SDS***************\n***************Debug SDS***************\n***************Debug SDS***************\n");
   const auto& secrets = bootstrap.static_resources().secrets();
   ENVOY_LOG(info, "loading {} static secret(s)", secrets.size());
   for (ssize_t i = 0; i < secrets.size(); i++) {
