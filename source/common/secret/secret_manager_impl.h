@@ -10,6 +10,7 @@
 
 #include "common/common/logger.h"
 #include "common/secret/sds_api.h"
+#include "common/common/base64.h"
 
 namespace Envoy {
 namespace Secret {
@@ -52,6 +53,10 @@ private:
                  Server::Configuration::TransportSocketFactoryContext& secret_provider_context) {
       const std::string map_key =
           absl::StrCat(MessageUtil::hash(sds_config_source), ".", config_name);
+      auto hashString = MessageUtil::hashToString(sds_config_source);
+      auto encoding_config = Base64::encode(hashString.c_str(), hashString.size());
+      ENVOY_LOG(info, "\n*****Debug SDS******\nsource/common/secret/secret_manager_impl.h DynamicSecretProviders::findOrCreate() "
+      "search provider for resource name {}, map_key is {}, and base64 encoded sds_config_source is {}", config_name, map_key, encoding_config);
 
       std::shared_ptr<SecretType> secret_provider = dynamic_secret_providers_[map_key].lock();
       if (!secret_provider) {
@@ -64,6 +69,8 @@ private:
         secret_provider = SecretType::create(secret_provider_context, sds_config_source,
                                              config_name, unregister_secret_provider);
         dynamic_secret_providers_[map_key] = secret_provider;
+        ENVOY_LOG(info, "\n*****Debug SDS******\nsource/common/secret/secret_manager_impl.h DynamicSecretProviders::findOrCreate() "
+        "create provider for resource name {}, and map_key is {}", config_name, map_key);
       }
       return secret_provider;
     }

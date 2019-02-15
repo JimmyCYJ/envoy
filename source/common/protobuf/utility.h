@@ -162,6 +162,21 @@ public:
     return HashUtil::xxHash64(text);
   }
 
+ static std::string hashToString(const Protobuf::Message& message) {
+    // Use Protobuf::io::CodedOutputStream to force deterministic serialization, so that the same
+    // message doesn't hash to different values.
+    std::string text;
+    {
+      // For memory safety, the StringOutputStream needs to be destroyed before
+      // we read the string.
+      Protobuf::io::StringOutputStream string_stream(&text);
+      Protobuf::io::CodedOutputStream coded_stream(&string_stream);
+      coded_stream.SetSerializationDeterministic(true);
+      message.SerializeToCodedStream(&coded_stream);
+    }
+    return text;
+  }
+  
   static ProtoUnknownFieldsMode proto_unknown_fields;
 
   static void checkUnknownFields(const Protobuf::Message& message) {
